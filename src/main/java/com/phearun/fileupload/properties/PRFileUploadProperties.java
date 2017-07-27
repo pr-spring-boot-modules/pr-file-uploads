@@ -1,22 +1,38 @@
 package com.phearun.fileupload.properties;
 
+import java.io.File;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author Phearun Rath
+ * @since 1.0.0
+ */
 @Configuration
 @ConfigurationProperties(prefix = "pr")
 public class PRFileUploadProperties {
 
-	private String clientPath;
+	/**
+	 * Client Path is used for client to request the uploaded files. When not
+	 * specified, /resources/assets/ will be used.
+	 */
+	private String clientPath = "/resources/assets/";
 
-	private String serverPath;
+	/**
+	 * Server Path specifies the directory where uploaded files will be stored.
+	 * When not specified, /tmp/assets/ will be used. You can also use
+	 * ${user.dir} to store in current project directory, ${user.home} to store
+	 * in user directory, etc.
+	 */
+	private String serverPath = "/tmp/assets/";
 
 	public String getClientPath() {
 		return clientPath;
 	}
 
 	public void setClientPath(String clientPath) {
-		this.clientPath = clientPath;
+		this.clientPath = clientPath.endsWith("/") ? clientPath : clientPath + "/";
 	}
 
 	public String getServerPath() {
@@ -24,11 +40,19 @@ public class PRFileUploadProperties {
 	}
 
 	public void setServerPath(String serverPath) {
-		this.serverPath = serverPath;
+		this.serverPath = serverPath.endsWith("/") ? serverPath : serverPath + "/";
+		File file = new File(this.serverPath);
+		if (!file.exists()) {
+			file.mkdir();
+		}
 	}
 
-	public void appendPath(String path) {
-		this.clientPath += path;
-		this.serverPath += path;
+	public String[] makeDirectory(String folder) {
+		File file = new File(this.serverPath + folder);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		return new String[] { this.serverPath + folder, this.clientPath + folder + "/" };
 	}
+
 }

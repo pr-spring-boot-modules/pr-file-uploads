@@ -1,6 +1,5 @@
 package com.phearun.fileupload.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -58,31 +57,29 @@ public class PRFileUploadServiceImpl implements PRFileUploadService {
 
 	@Description("Signle File Upload")
 	private String singleFileUpload(MultipartFile file, String folder) {
+
 		if (file == null) {
 			System.out.println("File is not present. Please choose file to upload!");
 			return null;
 		}
-		if (folder != "" && folder != null) {
-			this.fileProp.appendPath(folder);
-		}
-		File path = new File(this.fileProp.getServerPath());
-		if (!path.exists())
-			path.mkdirs();
-
-		// TODO: Generate random file name
+		String[] paths = new String[] { this.fileProp.getServerPath(), this.fileProp.getClientPath() };
+		
+		if (folder != "" && folder != null) 
+			paths = this.fileProp.makeDirectory(folder);
+		
 		String filename = file.getOriginalFilename();
 		filename = System.currentTimeMillis() + "." + filename.substring(filename.lastIndexOf(".") + 1);
 		try {
-			// TODO: Upload file to server
-			Files.copy(file.getInputStream(), Paths.get(this.fileProp.getServerPath(), filename));
+			Files.copy(file.getInputStream(), Paths.get(paths[0], filename));
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			System.out.println("=> " + e.getMessage());
 		}
-		return this.fileProp.getClientPath() + filename;
+		return paths[1] + filename;
 	}
 
 	@Description("Multiple Files Upload")
 	private List<String> multipleFileUpload(List<MultipartFile> files, String folder) {
+
 		List<String> filenames = new ArrayList<>();
 		files.forEach(file -> {
 			filenames.add(this.singleFileUpload(file, folder));
