@@ -19,7 +19,7 @@ public class PRFileUploadConfiguration extends WebMvcConfigurerAdapter{
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler(fileProp.getClientPath() + "/**").addResourceLocations("file:" + fileProp.getServerPath());
+		registry.addResourceHandler(fileProp.getClientPath() + "**").addResourceLocations("file:" + fileProp.getServerPath());
 	}
 	
 }

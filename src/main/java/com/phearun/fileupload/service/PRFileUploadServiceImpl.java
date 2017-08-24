@@ -63,12 +63,12 @@ public class PRFileUploadServiceImpl implements PRFileUploadService {
 			return null;
 		}
 		String[] paths = new String[] { this.fileProp.getServerPath(), this.fileProp.getClientPath() };
-		
-		if (folder != "" && folder != null) 
+
+		if (folder != "" && folder != null)
 			paths = this.fileProp.makeDirectory(folder);
-		
+
 		String filename = file.getOriginalFilename();
-		filename = System.currentTimeMillis() + "." + filename.substring(filename.lastIndexOf(".") + 1);
+		filename = System.nanoTime() + "." + filename.substring(filename.lastIndexOf(".") + 1);
 		try {
 			Files.copy(file.getInputStream(), Paths.get(paths[0], filename));
 		} catch (IOException e) {
@@ -79,7 +79,6 @@ public class PRFileUploadServiceImpl implements PRFileUploadService {
 
 	@Description("Multiple Files Upload")
 	private List<String> multipleFileUpload(List<MultipartFile> files, String folder) {
-
 		List<String> filenames = new ArrayList<>();
 		files.forEach(file -> {
 			filenames.add(this.singleFileUpload(file, folder));

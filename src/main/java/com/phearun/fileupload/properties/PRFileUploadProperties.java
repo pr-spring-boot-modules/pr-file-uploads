@@ -41,18 +41,18 @@ public class PRFileUploadProperties {
 
 	public void setServerPath(String serverPath) {
 		this.serverPath = serverPath.endsWith("/") ? serverPath : serverPath + "/";
-		File file = new File(this.serverPath);
-		if (!file.exists()) {
-			file.mkdir();
-		}
+		this.createIfNotExists(new File(this.serverPath));
 	}
 
 	public String[] makeDirectory(String folder) {
-		File file = new File(this.serverPath + folder);
+		this.createIfNotExists(new File(this.serverPath + folder));
+		return new String[] { this.serverPath + folder, this.clientPath + folder + "/" };
+	}
+	
+	private void createIfNotExists(File file){
 		if (!file.exists()) {
 			file.mkdir();
 		}
-		return new String[] { this.serverPath + folder, this.clientPath + folder + "/" };
 	}
 
 }

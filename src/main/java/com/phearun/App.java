@@ -1,25 +1,20 @@
 package com.phearun;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.phearun.fileupload.properties.PRFileUploadProperties;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class App implements CommandLineRunner{
+public class App extends SpringBootServletInitializer{
 	
     public static void main( String[] args ){
         SpringApplication.run(App.class, args);
     }
-
-    @Autowired
-    private PRFileUploadProperties fileProperties;
     
-	@Override
-	public void run(String... args) throws Exception {
-		System.out.println(fileProperties.getClientPath());
-		System.out.println(fileProperties.getServerPath());
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+    	return builder.sources(App.class);
+    }
+
 }
